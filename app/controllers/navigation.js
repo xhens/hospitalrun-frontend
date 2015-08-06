@@ -43,6 +43,11 @@ export default Ember.Controller.extend(ProgressDialog, UserSession, Navigation, 
         
         closeSettings: function() {
             this.set('isShowingSettings', false);
+        },
+        
+        toggleSidebar: function() {
+            console.log("Calling toggleSidebar");
+            Ember.$(".sidebar-nav").toggleClass("minimized");
         }
 
     }

@@ -10,6 +10,7 @@
         <nav class="settings-nav">
         {{#if session.isAuthenticated}}
             <a href="#" class="logout" {{ action 'invalidateSession' }}>Logout</a>
+            <a href="#" class="sidebar" {{action 'toggleSidebar' }}>Sidebar</a>
         {{else}}
             {{#link-to 'login'}}Login{{/link-to}}
         {{/if}}
