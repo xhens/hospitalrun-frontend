@@ -3,6 +3,7 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 export default BaseAuthenticator.extend({
   config: Ember.inject.service(),
   database: Ember.inject.service(),
+  metrics: Ember.inject.service(),
   serverEndpoint: '/db/_session',
   useGoogleAuth: false,
 
@@ -70,6 +71,7 @@ export default BaseAuthenticator.extend({
    @return {Ember.RSVP.Promise} A promise that resolves when an access token is successfully acquired from the server and rejects otherwise
    */
   authenticate: function(credentials) {
+    this.get('metrics').trackEvent({event: 'login-attempt', eventType: 'login', username: credentials.identification});
     if (credentials.google_auth) {
       this.useGoogleAuth = true;
       var sessionCredentials = {
@@ -99,7 +101,11 @@ export default BaseAuthenticator.extend({
           database.setup({}).then(() => {
             resolve(user);
           }, reject);
-        }, reject);
+          this.get('metrics').trackEvent({event: 'login-success', eventType: 'login', user: user.name});
+        }, function() {
+          this.get('metrics').trackEvent({event: 'login-failure', eventType: 'login', username: credentials.identification});
+          reject();
+        });
       }, function(xhr) {
         reject(xhr.responseJSON || xhr.responseText);
       });

@@ -60,6 +60,17 @@ module.exports = function(environment) {
       'bower_components/pouchdb/dist/pouchdb.js'
     ]
   };
+  
+  ENV.metricsAdapters = [
+      {
+        name: 'new-relic',
+        environments: ['all'],
+        config: {
+          licenseKey: '840ce085b68aa062d333c4d7e8529d6f5ae4a9fe',
+          applicationId: '21607318'
+        }
+      }
+  ];
 
   return ENV;
 };
