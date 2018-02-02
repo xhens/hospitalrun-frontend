@@ -1,4 +1,5 @@
 export default {
+  languageName: 'English',
   admin: {
     address: {
       address1Label: 'Address 1 Label',
@@ -34,6 +35,7 @@ export default {
         expenseTo: 'Expense To',
         formName: 'Form Name',
         formType: 'Form Type',
+        header: 'Header',
         incidentFormType: 'Incident',
         includeOtherOption: 'Include Other Option',
         labFormType: 'Lab',
@@ -60,6 +62,7 @@ export default {
         editCustomForm: 'Edit Custom Form',
         fields: 'Fields',
         formSaved: 'Form Saved',
+        headerValues: 'Header Line Value',
         newCustomForm: 'New Custom Form',
         radioValues: 'Radio Values'
       }
@@ -208,6 +211,17 @@ export default {
       messages: { roleSaved: 'The {{roleName}} role has been saved.' },
       titles: { roleSaved: 'Role Saved' }
     },
+    textReplacements: {
+      createNew: 'Create a new shortcode',
+      existingRepl: 'Existing Shortcodes',
+      replDesc: 'When entering text, these shortcuts allow you to replace a short sequence of characters with a longer phrase.',
+      pageTitle: 'Shortcodes',
+      toReplace: 'Text to replace',
+      replaceWith: 'Replace with',
+      performExpand: "Press Enter to replace #{{from}} with '{{to}}'",
+      possibleExpansions: 'Possible replacements: {{possible}}',
+      noMatches: "No replacements match '{{term}}'"
+    },
     userRoles: 'User Roles',
     users: 'Users',
     visitForms: {
@@ -303,7 +317,12 @@ export default {
       paymentProfile: 'Payment Profile',
       paymentsDeposits: 'Payments/Deposits',
       pricingPanelOverrides: 'Pricing profile overrides',
-      pricingProfile: 'Pricing Profile'
+      pricingProfile: 'Pricing Profile',
+      setFee: 'Set Fee'
+    },
+    messages: {
+      flatFeeMsg: 'There is a flat fee for patient financial responsibility of {{currency}}{{setFee}}.',
+      flatDiscountMsg: 'There is a flat discount amount applied to the patient financial responsibility of {{currency}}{{discountAmount}}.'
     }
   },
   buttons: {
@@ -331,8 +350,10 @@ export default {
     newRequestPlus: '+ new request',
     newUser: 'New User',
     ok: 'Ok',
+    print: 'Print',
     remove: 'Remove',
     returnButton: 'Return',
+    review: 'Review',
     search: 'Search',
     showAll: 'Show All',
     showFewer: 'Show Fewer',
@@ -400,7 +421,11 @@ export default {
     labels: { formToAdd: 'Form To Add' },
     titles: { addCustomForm: 'Add Custom Form' }
   },
-  dashboard: { title: 'What would you like to do?' },
+  dashboard: {
+    needs_user_setup: 'We recommend that you setup a User account.',
+    standalone_welcome: '<h4>Thanks for downloading HospitalRun</h4><p>You are running HospitalRun in stand alone mode. This mode allows you to support multiple users on a single, desktop/laptop instance of HospitalRun. This is ideal for:</p><ul><li>Evaluating HospitalRun for an eventual server deployment.</li><li>Using the platform to support a clinic / facility where a single instance is sufficient.</li></ul><p>If you\'re considering a multi-device deployment of HospitalRun, we\'re <a href="https://github.com/HospitalRun/hospitalrun-frontend/issues/1048" target="_blank">working on features</a> that will allow you to "graduate" from this single instance into a traditional cloud / server-based deployment.</p>',
+    title: 'Welcome to HospitalRun!'
+  },
   dates: {
     'long': '{{years}} year {{months}} months {{days}} days',
     longOmitDays: '{{years}} year {{months}} months',
@@ -459,7 +484,10 @@ export default {
     buttons: { newButton: '+ new imaging' },
     labels: {
       addNewVisit: '--Add New Visit--',
-      radiologist: 'Radiologist'
+      radiologist: 'Radiologist',
+      resultNotes: 'Result Notes',
+      requestedNotes: 'Requested Notes',
+      completedBy: 'Completed By'
     },
     messages: { noCompleted: 'No completed items found.' },
     pageTitle: 'Imaging Requests',
@@ -567,7 +595,7 @@ export default {
   inventory: {
     edit: {
       cost: 'Cost Per Unit:',
-      delivered: 'Delievered To:',
+      delivered: 'Delivered To:',
       location: 'Location Adjusted:',
       prescription: 'Prescription For:',
       pulled: 'Pulled From:',
@@ -757,6 +785,7 @@ export default {
     address: 'Address',
     age: 'Age',
     allDay: 'All Day',
+    allItems: 'All items',
     amount: 'Amount',
     anesthesia: 'Anesthesia',
     assisting: 'Assisting',
@@ -768,6 +797,7 @@ export default {
     country: 'Country',
     cptcode: 'CPT Code',
     creditTo: 'Credit To',
+    currencySymbol: '$',
     date: 'Date',
     dateCompleted: 'Date Completed',
     dateOfBirth: 'Date of Birth',
@@ -793,6 +823,7 @@ export default {
     fileLoadSuccessful: 'File To Load Successful',
     fileName: 'File Name',
     fileToLoad: 'File Load',
+    from: 'From',
     fulfill: 'Fulfill',
     fulfillRequest: 'Fulfill Request',
     fulfillRequestNow: 'Fulfill Request Now',
@@ -811,6 +842,7 @@ export default {
     medication: 'Medication',
     name: 'Name',
     newUser: 'New User',
+    newItem: '+ new item',
     note: 'Note',
     notes: 'Notes',
     number: 'Number',
@@ -841,6 +873,7 @@ export default {
     startTime: 'Start Time',
     status: 'Status',
     takenBy: 'Taken By',
+    to: 'To',
     total: 'Total',
     type: 'Type',
     userCanAddNewValue: 'User Can Add New Values',
@@ -899,6 +932,7 @@ export default {
     },
     messages: {
       error: 'Username or password is incorrect.',
+      offlineError: 'Cannot login while offline.  Please establish a network connection and retry login.',
       signIn: 'please sign in'
     }
   },
@@ -1049,7 +1083,8 @@ export default {
     about: 'About HospitalRun',
     actions: {
       login: 'Login',
-      logout: 'Logout'
+      logout: 'Logout',
+      selectLanguage: 'Select Language'
     },
     administration: 'Administration',
     billing: 'Billing',
@@ -1058,6 +1093,9 @@ export default {
     inventory: 'Inventory',
     labs: 'Labs',
     medication: 'Medication',
+    messages: {
+      logoutFailed: 'Could not logout at this time.  Logout is not available while offline.'
+    },
     patients: 'Patients',
     scheduling: 'Scheduling',
     subnav: {
@@ -1076,6 +1114,7 @@ export default {
       history: 'History',
       incidentCategories: 'Incident Categories',
       inventoryReceived: 'Inventory Received',
+      inventoryReceivedPlus: '+ Inventory Received',
       invoices: 'Invoices',
       items: 'Items',
       loadDB: 'Load DB',
@@ -1094,11 +1133,15 @@ export default {
       requests: 'Requests',
       returnMedication: 'Return Medication',
       scheduleSurgery: 'Schedule Surgery',
+      textReplacements: 'Shortcodes',
       theaterSchedule: 'Theater Schedule',
       "today'sAppointments": "Today's Appointments",
       userRoles: 'User Roles',
       users: 'Users',
       workflow: 'Workflow'
+    },
+    titles: {
+      logoutFailed: 'Logout Failed'
     }
   },
   operationReport: {
@@ -1270,6 +1313,13 @@ export default {
       visit: 'Visit'
     }
   },
+  pricing: {
+    labels: {
+      discountAmount: 'Discount Amount',
+      discountPercentage: 'Discount Percentage',
+      setFee: 'Set Fee'
+    }
+  },
   print: { invoice: {
     labels: {
       billedBy: 'Billed by:',
@@ -1424,14 +1474,16 @@ export default {
       visitSaved: 'Visit Saved'
     }
   },
-  vitals: { labels: {
-    dateRecorded: 'Date Recorded',
-    dbp: 'DBP',
-    heartRate: 'Heart Rate',
-    height: 'Height',
-    respiratoryRate: 'Respiratory Rate',
-    sbp: 'SBP',
-    temperature: 'Temperature',
-    weight: 'Weight'
-  } }
+  vitals: {
+    labels: {
+      dateRecorded: 'Date Recorded',
+      dbp: 'DBP',
+      heartRate: 'Heart Rate',
+      height: 'Height',
+      respiratoryRate: 'Respiratory Rate',
+      sbp: 'SBP',
+      temperature: 'Temperature',
+      weight: 'Weight'
+    }
+  }
 };

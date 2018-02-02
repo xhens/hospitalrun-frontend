@@ -1,21 +1,13 @@
-import Ember from 'ember';
-import { module, test } from 'qunit';
-import startApp from 'hospitalrun/tests/helpers/start-app';
+import { test } from 'qunit';
+import moduleForAcceptance from 'hospitalrun/tests/helpers/module-for-acceptance';
 
-module('Acceptance | custom forms', {
-  beforeEach() {
-    this.application = startApp();
-  },
-
-  afterEach() {
-    Ember.run(this.application, 'destroy');
-  }
-});
+moduleForAcceptance('Acceptance | custom forms');
 
 test('crud operations on custom-forms', function(assert) {
   let crusts =  ['Thin', 'Deep Dish', 'Flatbread'];
   let desserts = ['Ice Cream', 'Cookies', 'Cake'];
   let toppings =  ['Cheese', 'Pepperoni', 'Mushrooms'];
+  let header = ['______________________________'];
 
   function addField(fieldType, label, values) {
     click('button:contains(Add Field)');
@@ -56,6 +48,8 @@ test('crud operations on custom-forms', function(assert) {
     click('button:contains(Preview)');
     waitToAppear('.form-preview');
     andThen(function() {
+      assert.equal(find('.form-preview label:contains(Create a Pizza)').length, 1, 'Found Create a Pizza Label');
+      assert.equal(find(`.form-preview label:contains(${header})`).length, 1, `Found ${header} Label`);
       assert.equal(find('.form-preview label:contains(Pizza Toppings)').length, 1, 'Found Pizza Toppings Label');
       toppings.forEach((topping) => {
         assert.equal(find(`.form-preview label:contains(${topping}):has(input[type=checkbox])`).length, 1, `Found ${topping} checkbox`);
@@ -95,6 +89,9 @@ test('crud operations on custom-forms', function(assert) {
     });
     andThen(function() {
       assert.equal(find('.modal-title').text(), 'Form Saved', 'Form is saved');
+      addField('Header', 'Create a Pizza', header);
+    });
+    andThen(function() {
       addField('Checkbox', 'Pizza Toppings', toppings);
     });
     andThen(function() {

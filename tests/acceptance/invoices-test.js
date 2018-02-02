@@ -1,16 +1,8 @@
 import Ember from 'ember';
-import { module, test } from 'qunit';
-import startApp from 'hospitalrun/tests/helpers/start-app';
+import { test } from 'qunit';
+import moduleForAcceptance from 'hospitalrun/tests/helpers/module-for-acceptance';
 
-module('Acceptance | invoices', {
-  beforeEach() {
-    this.application = startApp();
-  },
-
-  afterEach() {
-    Ember.run(this.application, 'destroy');
-  }
-});
+moduleForAcceptance('Acceptance | invoices');
 
 test('visiting /invoices', function(assert) {
   runWithPouchDump('billing', function() {
@@ -61,7 +53,58 @@ test('print invoice', function(assert) {
       click('button:contains(Print)');
     });
     andThen(function() {
-      assert.equal(find('.print-invoice').length, 1, 'Invoice is displayed for printing');
+      assert.equal(find('.invoices-review').length, 1, 'Invoice is displayed for printing');
+    });
+  });
+});
+
+// test pricing profile
+test('pricing profiles', function(assert) {
+  runWithPouchDump('billing', function() {
+    authenticateUser();
+    visit('/pricing/profiles');
+    andThen(function() {
+      assert.equal(find('.btn-primary:contains(+ new item)').length, 1, 'We can add a new pricing profile');
+      click('button:contains(+ new item)');
+      waitToAppear('h4:contains(New Pricing Profile)');
+    });
+    // % discount
+    andThen(function() {
+      fillIn('.pricing-profile-name input', '50% profile');
+      fillIn('.pricing-profile-percentage input', '50');
+      click('button:contains(Add)');
+      waitToAppear('button:contains(Ok)');
+      click('button:contains(Ok)');
+    });
+    andThen(function() {
+      click('button:contains(+ new item)');
+      waitToAppear('h4:contains(New Pricing Profile)');
+    });
+    // flat discount
+    andThen(function() {
+      fillIn('.pricing-profile-name input', '$100 discount');
+      fillIn('.pricing-profile-discount input', '100');
+      click('button:contains(Add)');
+      waitToAppear('button:contains(Ok)');
+      click('button:contains(Ok)');
+    });
+    andThen(function() {
+      click('button:contains(+ new item)');
+      waitToAppear('h4:contains(New Pricing Profile)');
+    });
+    // flat fee
+    andThen(function() {
+      fillIn('.pricing-profile-name input', '$150 fee');
+      fillIn('.pricing-set-fee input', '150');
+      click('button:contains(Add)');
+      waitToAppear('button:contains(Ok)');
+      click('button:contains(Ok)');
+    });
+    visit('/invoices');
+    andThen(function() {
+      assert.equal(currentURL(), '/invoices');
+      assert.equal(find('.invoice-number:contains(inv00001)').length, 1, 'Invoice is available for modifying');
+      click('button:contains(Edit)');
     });
   });
 });
@@ -155,7 +198,37 @@ test('cashier role', function(assert) {
     });
     click('a:contains(Billing)');
     andThen(function() {
-      assert.equal(find('.category-sub-item').length, 3, 'Should have 3 sub navigations');
+      assert.equal(find('.category-sub-item').length, 2, 'Should have 2 sub navigations');
+    });
+  });
+});
+
+test('Searching invoices', function(assert) {
+  runWithPouchDump('billing', function() {
+    authenticateUser();
+    visit('/invoices');
+
+    fillIn('[role="search"] div input', 'Joe');
+    click('.glyphicon-search');
+
+    andThen(() => {
+      assert.equal(currentURL(), '/invoices/search/Joe', 'Searched for Joe');
+      assert.equal(find('.invoice-number').length, 1, 'There is one search item');
+    });
+
+    fillIn('[role="search"] div input', 'joe');
+    click('.glyphicon-search');
+
+    andThen(() => {
+      assert.equal(currentURL(), '/invoices/search/joe', 'Searched for all lower case joe');
+      assert.equal(find('.invoice-number').length, 1, 'There is one search item');
+    });
+    fillIn('[role="search"] div input', 'ItemNotFound');
+    click('.glyphicon-search');
+
+    andThen(() => {
+      assert.equal(currentURL(), '/invoices/search/ItemNotFound', 'Searched for ItemNotFound');
+      assert.equal(find('.invoice-number').length, 0, 'There is no search result');
     });
   });
 });

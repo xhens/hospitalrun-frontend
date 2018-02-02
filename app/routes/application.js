@@ -3,6 +3,7 @@ import Ember from 'ember';
 import ModalHelper from 'hospitalrun/mixins/modal-helper';
 import SetupUserRole from 'hospitalrun/mixins/setup-user-role';
 import UnauthorizedError from 'hospitalrun/utils/unauthorized-error';
+import { DEFAULT_LANGUAGE } from 'hospitalrun/services/language-preference';
 
 const { get, inject, isEmpty, Route, set } = Ember;
 
@@ -12,6 +13,7 @@ let ApplicationRoute = Route.extend(ApplicationRouteMixin, ModalHelper, SetupUse
   database: inject.service(),
   config: inject.service(),
   session: inject.service(),
+  languagePreference: inject.service(),
   shouldSetupUserRole: true,
 
   actions: {
@@ -81,25 +83,34 @@ let ApplicationRoute = Route.extend(ApplicationRouteMixin, ModalHelper, SetupUse
   model(params, transition) {
     let session = get(this, 'session');
     let isAuthenticated = session && get(session, 'isAuthenticated');
-    return get(this, 'config').setup().then(function(configs) {
+    let config = get(this, 'config');
+    let database = get(this, 'database');
+
+    return config.setup().then(() => {
+      let standAlone = config.get('standAlone');
       if (transition.targetName !== 'finishgauth' && transition.targetName !== 'login') {
         set(this, 'shouldSetupUserRole', true);
-        if (isAuthenticated) {
-          return get(this, 'database').setup(configs)
+        if (isAuthenticated || standAlone) {
+          return database.setup()
             .catch(() => {
               // Error thrown indicates missing auth, so invalidate session.
               session.invalidate();
             });
         }
+      } else if (transition.targetName === 'login' && standAlone) {
+        return database.createUsersDB();
       } else if (transition.targetName === 'finishgauth') {
         set(this, 'shouldSetupUserRole', false);
       }
-    }.bind(this));
+    });
   },
 
   afterModel() {
     set(this.controllerFor('navigation'), 'allowSearch', false);
     $('#apploading').remove();
+
+    // this enables page reloading support
+    this.get('languagePreference').loadUserLanguagePreference();
   },
 
   renderModal(template) {
@@ -125,6 +136,12 @@ let ApplicationRoute = Route.extend(ApplicationRouteMixin, ModalHelper, SetupUse
     } else {
       this._super();
     }
+
+    this.get('languagePreference').loadUserLanguagePreference();
+  },
+  sessionInvalidated() {
+    this._super();
+    this.get('languagePreference').setApplicationLanguage(DEFAULT_LANGUAGE);
   }
 });
 export default ApplicationRoute;

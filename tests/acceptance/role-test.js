@@ -1,17 +1,8 @@
-import Ember from 'ember';
-import { module, test } from 'qunit';
-import startApp from 'hospitalrun/tests/helpers/start-app';
+import { test } from 'qunit';
+import moduleForAcceptance from 'hospitalrun/tests/helpers/module-for-acceptance';
 import { PREDEFINED_USER_ROLES } from 'hospitalrun/mixins/user-roles';
 
-module('Acceptance | roles', {
-  beforeEach() {
-    this.application = startApp();
-  },
-
-  afterEach() {
-    Ember.run(this.application, 'destroy');
-  }
-});
+moduleForAcceptance('Acceptance | roles');
 
 test('visiting /admin/roles', function(assert) {
   runWithPouchDump('admin', function() {
@@ -57,7 +48,7 @@ test('visiting /admin/roles', function(assert) {
 });
 
 PREDEFINED_USER_ROLES.forEach((role) => {
-  if (role.name !== 'User Administrator') {
+  if (role.defaultRoute && role.name !== 'User Administrator') {
     test(`Testing User Role homescreen for ${role.name}`, (assert) =>{
       runWithPouchDump('default', () => {
         authenticateUser({
